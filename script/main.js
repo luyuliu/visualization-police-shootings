@@ -19,19 +19,13 @@ function animateSidebar() {
 }
 var baseLayer = L.esri.basemapLayer('DarkGray')
 
-
-var labelTextCollision = new L.LabelTextCollision({
-  collisionFlg: true
-});
-
 map = L.map("map", {
   zoom: 5.3,
   center: [39.707186656826565, -100],
   layers: [baseLayer],
-  zoomControl: false,
-  attributionControl: false,
-  maxZoom: 18,
-  renderer: labelTextCollision
+  zoomControl: true,
+  attributionControl: true,
+  maxZoom: 10
 });
 
 map.on("click", function (e) {
@@ -72,27 +66,26 @@ function readyFunction(data) {
     spiderfyOnMaxZoom: true,
     showCoverageOnHover: false,
     zoomToBoundsOnClick: true,
-    disableClusteringAtZoom: 12
+    disableClusteringAtZoom: 9
   });
 
   clusterFullLayer = L.geoJson(data, {
     pointToLayer: function (feature, latlng) {
-      console.log(feature, latlng)
       return new L.circleMarker(latlng, {
         //radius: 10, 
         //fillOpacity: 0.85
         //This sets them as empty circles
-        radius: 30000,
+        radius: 10,
         //this is the color of the center of the circle
-        fillColor: "#000",
+        fillColor: "#ffffff",
         //this is the color of the outside ring
-        color: "#000",
+        color: "#ffffff",
         //this is the thickness of the outside ring
         weight: .5,
         //This is the opacity of the outside ring
         opacity: 1,
         //this is the opacity of the center. setting it to 0 makes the center transparent
-        //fillOpacity: 1,
+        fillOpacity: 0.5,
       });
     },
     onEachFeature: function (feature, layer) {
@@ -104,10 +97,9 @@ function readyFunction(data) {
         });
       }
     }
-  }).addTo(map);
+  });
 
 
   clusterLayer.addLayer(clusterFullLayer)
   map.addLayer(clusterLayer);
-  map.addLayer(clusterFullLayer);
 }
