@@ -56,7 +56,7 @@ north.addTo(map);
 
 $(document).ready(function (e) {
   var allPromises = [
-    $.get("https://raw.githubusercontent.com/washingtonpost/data-police-shootings/master/fatal-police-shootings-data.csv")
+    $.get("https://luyuliu.github.io/visualization-police-shootings/data/shooting_geocoded.csv")
   ];
   Promise.all(allPromises).then(readyFunction);
 
@@ -84,6 +84,12 @@ function readyFunction(data) {
   console.log(lines)
 
   // Visualization
-  
+  clusterLayer = new L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: false,
+    zoomToBoundsOnClick: true,
+    disableClusteringAtZoom: 12,
+    clusterPane: layerID + "Pane"
+  });
 
 }
