@@ -53,10 +53,9 @@ north.onAdd = function (map) {
 }
 north.addTo(map);
 
-
 $(document).ready(function (e) {
   var allPromises = [
-    $.get("https://luyuliu.github.io/visualization-police-shootings/data/shooting_geocoded.csv")
+    $.get("https://luyuliu.github.io/visualization-police-shootings/data/shooting.geojson")
   ];
   Promise.all(allPromises).then(readyFunction);
 
@@ -64,32 +63,51 @@ $(document).ready(function (e) {
 
 function readyFunction(data) {
   // Data processing
-  var allText = data[0];
-  console.log(allText);
-  var allTextLines = allText.split(/\r\n|\n/);
-  var headers = allTextLines[0].split(',');
-  var lines = [];
+  var data = data[0]
+  console.log(data)
 
-  for (var i = 1; i < allTextLines.length; i++) {
-    var data = allTextLines[i].split(',');
-    if (data.length == headers.length) {
-
-      var tarr = {};
-      for (var j = 0; j < headers.length; j++) {
-        tarr[headers[j]] = data[j];
-      }
-      lines.push(tarr);
-    }
-  }
-  console.log(lines)
 
   // Visualization
   clusterLayer = new L.markerClusterGroup({
     spiderfyOnMaxZoom: true,
     showCoverageOnHover: false,
     zoomToBoundsOnClick: true,
-    disableClusteringAtZoom: 12,
-    clusterPane: layerID + "Pane"
+    disableClusteringAtZoom: 12
   });
 
+  clusterFullLayer = L.geoJson(data, {
+    pointToLayer: function (feature, latlng) {
+      console.log(feature, latlng)
+      return new L.circleMarker(latlng, {
+        //radius: 10, 
+        //fillOpacity: 0.85
+        //This sets them as empty circles
+        radius: 30000,
+        //this is the color of the center of the circle
+        fillColor: "#000",
+        //this is the color of the outside ring
+        color: "#000",
+        //this is the thickness of the outside ring
+        weight: .5,
+        //This is the opacity of the outside ring
+        opacity: 1,
+        //this is the opacity of the center. setting it to 0 makes the center transparent
+        //fillOpacity: 1,
+      });
+    },
+    onEachFeature: function (feature, layer) {
+      if (feature.properties) {
+        layer.on({
+          click: function (e) {
+
+          }
+        });
+      }
+    }
+  }).addTo(map);
+
+
+  clusterLayer.addLayer(clusterFullLayer)
+  map.addLayer(clusterLayer);
+  map.addLayer(clusterFullLayer);
 }
