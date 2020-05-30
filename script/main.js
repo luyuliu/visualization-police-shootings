@@ -10,13 +10,6 @@ $('.mini-submenu').on('click', function () {
   $('.mini-submenu').hide();
 })
 
-function animateSidebar() {
-  $("#sidebar").animate({
-    width: "toggle"
-  }, 350, function () {
-    map.invalidateSize();
-  });
-}
 var baseLayer = L.esri.basemapLayer('DarkGray')
 
 map = L.map("map", {
@@ -32,11 +25,6 @@ map.on("click", function (e) {
   console.log(e)
 })
 
-function getColorBlockString(color) {
-  var div = '<div class="legendbox" style="padding:0px;background:' + color + '"></div>'
-  return div;
-}
-
 L.control.scale({ position: "bottomleft" }).addTo(map);
 var north = L.control({ position: "topright" });
 north.onAdd = function (map) {
@@ -49,7 +37,7 @@ north.addTo(map);
 
 $(document).ready(function (e) {
   var allPromises = [
-    $.get("https://luyuliu.github.io/visualization-police-shootings/data/shooting.geojson")
+    $.get("https://luyuliu.github.io/visualization-police-shootings/data/cities.geojson")
   ];
   Promise.all(allPromises).then(readyFunction);
 
@@ -62,26 +50,59 @@ function readyFunction(data) {
 
 
   // Visualization
-  clusterLayer = new L.markerClusterGroup({
-    spiderfyOnMaxZoom: true,
-    showCoverageOnHover: false,
-    zoomToBoundsOnClick: true,
-    disableClusteringAtZoom: 9
-  });
+  var colorRamp = [1, 2, 3, 4, 5, 6, 12, 83]
+  var colorCode = ['#fee5d9', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#99000d']
 
-  clusterFullLayer = L.geoJson(data, {
+  var sizeCode = [2, 3, 4, 5, 6, 8, 10]
+
+  var title = 'Police shooting<br>';
+  var legend = L.control({ position: "bottomright" });
+  legend.onAdd = function (map) {
+    var div = L.DomUtil.create("div", "info legend");
+    div.id = 'legend'
+
+    var legendContent2 = "<span style='font-size:30;'>Legend</span>"
+    legendContent2 += "<h3>" + title + "</h3>"
+    legendContent2 += '<table><tbody>'
+    for (var i = 0; i < colorCode.length; i++) {
+      if (colorRamp[i] == -Infinity) {
+        labelContent2 = "( -∞, " + colorRamp[i + 1] + ")";
+      }
+      else {
+        if (colorRamp[i + 1] == Infinity) {
+          labelContent2 = "[" + colorRamp[i] + ", ∞ )";
+        }
+        else {
+          labelContent2 = "[" + colorRamp[i] + ", " + colorRamp[i + 1] + ")";
+        }
+      }
+      legendContent2 += "<tr valign='middle'>" +
+        "<td class='tablehead' align='middle'>" + getColorBlockString(colorCode[i], sizeCode[i]) + "</td>" +
+        "<td class='tablecontent' align='right' style='width:180px;'><span style='width:90%;font-size:30;font:'>" + labelContent2 + "</span><td>" + "</tr>";
+    }
+    legendContent2 += "</tbody><table>";
+
+    div.innerHTML = legendContent2;
+    return div;
+  }
+  legend.addTo(map);
+
+  citiesLayer = L.geoJson(data, {
     pointToLayer: function (feature, latlng) {
+      var count = feature.properties.Join_Count;
+      var color = returnColor(count, colorRamp, colorCode);
+      var size = returnSize(count, colorRamp, sizeCode);
       return new L.circleMarker(latlng, {
         //radius: 10, 
         //fillOpacity: 0.85
         //This sets them as empty circles
-        radius: 10,
+        radius: size,
         //this is the color of the center of the circle
-        fillColor: "#ffffff",
+        fillColor: color,
         //this is the color of the outside ring
         color: "#ffffff",
         //this is the thickness of the outside ring
-        weight: .5,
+        weight: 0,
         //This is the opacity of the outside ring
         opacity: 1,
         //this is the opacity of the center. setting it to 0 makes the center transparent
@@ -92,14 +113,77 @@ function readyFunction(data) {
       if (feature.properties) {
         layer.on({
           click: function (e) {
+            console.log(e)
+
+
+            var table = new Tabulator("#victims-table", {
+              data: data,           //load row data from array
+              layout: "fitColumns",      //fit columns to width of table
+              responsiveLayout: "hide",  //hide columns that dont fit on the table
+              tooltips: true,            //show tool tips on cells
+              addRowPos: "top",          //when adding a new row, add it to the top of the table
+              history: true,             //allow undo and redo actions on the table
+              pagination: "local",       //paginate the data
+              paginationSize: 7,         //allow 7 rows per page of data
+              movableColumns: true,      //allow column order to be changed
+              resizableRows: true,       //allow row order to be changed
+              initialSort: [             //set the initial sort order of the data
+                { column: "name", dir: "asc" },
+              ],
+              columns: [                 //define the table columns
+                { title: "Name", field: "name" },
+                { title: "Name", field: "name" },
+                { title: "Name", field: "name" },
+                { title: "Name", field: "name" },
+                { title: "Name", field: "name" },
+                { title: "Name", field: "name" },
+              ],
+            });
 
           }
         });
       }
     }
+  }).addTo(map);
+
+
+}
+
+
+
+function animateSidebar() {
+  $("#sidebar").animate({
+    width: "toggle"
+  }, 350, function () {
+    map.invalidateSize();
   });
+}
 
+function getColorBlockString(color, size) {
+  var div = '<svg height="20" width="20"><circle cx="10" cy="10" r="'+ size +'" fill="' + color + '"></circle></svg>'
+  return div;
+}
 
-  clusterLayer.addLayer(clusterFullLayer)
-  map.addLayer(clusterLayer);
+function returnColor(value, colorRamp, colorCode) {
+  for (var i = 1; i < colorRamp.length; i++) {
+    if (value >= colorRamp[i - 1] && value < colorRamp[i]) {
+      return colorCode[i - 1]
+    }
+    else {
+      continue;
+    }
+  }
+  return
+}
+
+function returnSize(value, colorRamp, sizeCode) {
+  for (var i = 1; i < colorRamp.length; i++) {
+    if (value >= colorRamp[i - 1] && value < colorRamp[i]) {
+      return sizeCode[i - 1]
+    }
+    else {
+      continue;
+    }
+  }
+  return
 }

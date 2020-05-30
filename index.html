@@ -33,9 +33,11 @@
 
 	<!-- cluster -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster-src.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster-src.js"></script>
 
-	
+	<link href="https://unpkg.com/tabulator-tables@4.1.4/dist/css/tabulator.min.css" rel="stylesheet">
+	<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.1.4/dist/js/tabulator.min.js"></script>
 
 	<script src="./js/L.LabelTextCollision.js"></script>
 
@@ -46,7 +48,8 @@
 	<link rel="stylesheet" href="./css/leaflet.css">
 	<link rel="stylesheet" href="./css/bootleaf.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css">
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css">
 
 </head>
 
@@ -67,7 +70,24 @@
 		</div>
 		<div id="sidebar">
 			<div class="sidebar-wrapper">
+				<div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
+					<div class="panel panel-default" style="margin:0">
+						<div class="panel-heading" role="tab" id="headingOne1" style="margin:0">
+							<a class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapseOne1"
+								aria-expanded="true" aria-controls="collapseOne1">Project Information
+							</a>
+						</div>
 
+
+					</div>
+					<div id="collapseOne1" class="panel-collapse collapse in" role="tabpanel"
+						aria-labelledby="headingOne1" style="margin:0">
+						<div class="panel-body">
+							<p>This project visualizes</p>
+
+						</div>
+					</div>
+				</div>
 				<div class="panel-group" id="accordion1" role="tablist" aria-multiselectable="true">
 					<div class="panel panel-default" style="margin:0">
 						<div class="panel-heading" role="tab" id="headingOne0" style="margin:0">
@@ -85,26 +105,7 @@
 					<div id="collapseOne0" class="panel-collapse collapse in" role="tabpanel"
 						aria-labelledby="headingOne0" style="margin:0">
 						<div class="panel-body">
-
-
-						</div>
-					</div>
-				</div>
-				
-				<div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
-					<div class="panel panel-default" style="margin:0">
-						<div class="panel-heading" role="tab" id="headingOne1" style="margin:0">
-							<a class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapseOne1"
-								aria-expanded="true" aria-controls="collapseOne1">Project Information
-							</a>
-						</div>
-
-
-					</div>
-					<div id="collapseOne1" class="panel-collapse collapse in" role="tabpanel"
-						aria-labelledby="headingOne1" style="margin:0">
-						<div class="panel-body">
-							<p>This project visualizes</p>
+							<div id="victims-table"></div>
 
 						</div>
 					</div>
