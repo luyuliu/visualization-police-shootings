@@ -45,7 +45,7 @@
 }
 
 #sidebar {
-  width: 250px;
+  width: 500px;
 }
 
 .list-complete-item {
@@ -113,11 +113,11 @@
 }
 
 .panel-heading {
-  width: 250px;
+  width: 500px;
 }
 
 .panel-body {
-  width: 250px;
+  width: 500px;
 }
 
 .accordion-wrapper {
