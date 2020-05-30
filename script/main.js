@@ -139,18 +139,19 @@ function readyFunction(data) {
 
             var popup = L.popup()
               .setLatLng([parseFloat(latlng[1]), parseFloat(latlng[0])])
-              .setContent("<span>Total Casualty: " + property["count"] +
+              .setContent("<span>Region: " + property["city"] + ",  " + property['state'] + 
+                "</span></br><span>Total Casualty: " + property["count"] +
                 "</span></br><span>Female victims percentage: " + Math.round(property["female_cou"] / total_count * 100) +
                 "%</span></br><span>Known black victims percentage: " + Math.round(property["known_blac"] / total_count * 100) +
                 "%</span></br><span>Known hispanic victims percentage: " + Math.round(property["known_hisp"] / total_count * 100) +
                 "%</span></br><span>Known nonwhite victims percentage: " + Math.round(property["known_nonw"] / total_count * 100) +
                 "%</span></br><span>age span: " + min_age + " - " + max_age +
                 "</span></br><span>Non-fleeing percentage: " + Math.round(property["non_fleein"] / total_count * 100) +
-                "%</span></br><span>Unarmed percentage: " + Math.round(property["unarmed_co"] / total_count * 100) + 
+                "%</span></br><span>Unarmed percentage: " + Math.round(property["unarmed_co"] / total_count * 100) +
                 "%</span>"
               )
               .openOn(map);
-            
+
             var victim_data = victims_hash_data[property["OBJECTID"].toString()]
             console.log(victim_data)
             var table = new Tabulator("#victims-table", {
