@@ -83,3 +83,7 @@ for index, item in aggregation.items():
     for _, i in item.items():
         iaa.append(i)
     print(iaa)
+
+import json
+with open('C:\\Users\\liu.6544\\Documents\\GitHub\\visualization-police-shootings\\data\\victims.json', 'w', encoding='utf-8') as f:
+    json.dump(dic, f, ensure_ascii=False, indent=0)
